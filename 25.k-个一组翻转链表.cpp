@@ -15,45 +15,31 @@ struct ListNode {
 // @lc code=start
 class Solution {
 public:
-    ListNode* reverseAll(ListNode *head) {
-        ListNode res;
+    ListNode* reverseAll(ListNode *head, ListNode *tail) {
+        ListNode *pre = nullptr;
         
-        while (head) {
+        while (head != tail) {
             auto tmp = head->next;
-            head->next = res.next;
-            res.next = head;
+            head->next = pre;
+            pre = head;
             head = tmp;
         }
         
-        return res.next;
+        return pre;
     }
 
     ListNode* reverseKGroup(ListNode* head, int k) {
-        ListNode *kHead = head, *kTail = head;
-
-        ListNode *ans = nullptr;
-        ListNode *pre = nullptr;
-        while (kHead) {
-            for (int i = 0; i < k-1 && kTail != nullptr; ++i, kTail = kTail->next) ;
-
-            if (kTail) {
-                auto newKHead = kTail->next;
-
-                kTail->next = nullptr;
-                auto tmp = reverseAll(kHead);
-                if (!ans) ans = tmp;
-                if (pre) pre->next = tmp;
-
-                pre = kHead;
-                kHead = kTail = newKHead;
-            } else {
-                if (pre) pre->next = kHead;
-                kHead= kTail = nullptr;
-            }
+        if (head == nullptr) return nullptr;
+        
+        ListNode *kTail = head;
+        for (int i = 0; i < k; ++i) {
+            if (kTail == nullptr) return head;
+            kTail = kTail->next;
         }
-        if (ans == nullptr) ans = head;
-        return ans;
-
+        
+        ListNode *newHead = reverseAll(head, kTail);
+        head->next = reverseKGroup(kTail, k);
+        return newHead;
     }
 };
 // @lc code=end
