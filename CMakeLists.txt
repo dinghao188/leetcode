@@ -20,3 +20,5 @@ foreach(case ${SRC})
     target_link_libraries(${case_} gtest_main)
     gtest_discover_tests(${case_})
 endforeach()
+
+add_subdirectory(graph)
