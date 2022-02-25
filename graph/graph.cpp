@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 using namespace std;
 
-// 并查集
+//并查集,可以用来判断图的连通性
 class UnionFindSet {
 public:
     UnionFindSet(int n) {
@@ -78,14 +78,16 @@ int KruskalMST(vector<Edge> &edges, int n) {
 }
 //Prim最小生成树算法，图比较稠密时使用
 int PrimMST(vector<vector<int>> &graph) {
-    unordered_set<int> visited;    
+    unordered_set<int> visited; 
     unordered_set<int> un_visited;
     
     visited.insert(0);
     for (int i = 1; i < graph.size(); ++i) un_visited.insert(i);
     
+    auto cmp = [](const Edge &e1, const Edge &e2) { return e1.weight > e2.weight; };
+    
     int cur = 0;
-    priority_queue<Edge> pq;
+    priority_queue<Edge, vector<Edge>, decltype(cmp)> pq(cmp);
     for (int i = 0; i < graph.size(); ++i) {
         if (graph[cur][i] == -1) continue;
         pq.push({cur, i, graph[cur][i]});
